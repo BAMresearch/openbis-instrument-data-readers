@@ -8,15 +8,13 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.14",
 ]
 name = "bam-upload-parsers"
 description = "Repo for restructuring the parsers from bam-upload-helper"
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 authors = [
   { name = "Bastian Rühle", email = "bastian.ruehle@bam.de" },
   { name = "Ingo Breßler", email = "ingo.bressler@bam.de" },
@@ -32,7 +30,7 @@ license = { file = "LICENSE" }
 dependencies = [
   "bam-masterdata@git+https://github.com/BAMresearch/bam-masterdata.git@main",
   "nmrglue",
-  "numpy<2.0"
+  "numpy"
 ]
 
 [project.urls]
@@ -41,7 +39,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "mypy==1.0.1",
+  "mypy>=1.18.2",
   "ruff",
   "pytest",
   "pytest-timeout",
@@ -118,6 +116,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.mypy]
+python_version = "3.14"
 strict = false
 ignore_missing_imports = true
 follow_imports = "silent"

@@ -11,19 +11,11 @@
 # Copyright (c) 2025, BAMResearch
 
 
-import codecs
-import json
-import math
-import os.path
-import xml.etree.ElementTree as ET
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple, Union
 
-import h5py
 import nmrglue as ng
 import numpy as np
-from bam_masterdata.datamodel.object_types import Dls, Ftir, Nmr, Sem, Tem
-from bam_masterdata.logger import logger
+from bam_masterdata.datamodel.activities import Nmr
 from bam_masterdata.metadata.entities import CollectionType
 from bam_masterdata.parsing import AbstractParser
 from structlog._config import BoundLoggerLazyProxy

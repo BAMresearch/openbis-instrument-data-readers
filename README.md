@@ -31,7 +31,7 @@ This repository restructures parser components originally from `bam-upload-helpe
 
 ### Prerequisites
 
-- Tested for Python 3.10+
+- Python 3.14 or newer
 - `pip` for dependency installation
 - Optional: virtualenv or conda environment for isolation
 
