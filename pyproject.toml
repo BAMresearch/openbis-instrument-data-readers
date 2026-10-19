@@ -10,7 +10,7 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.14",
 ]
-name = "bam-upload-parsers"
+name = "openbis-instrument-data-readers"
 description = "Repo for restructuring the parsers from bam-upload-helper"
 dynamic = ["version"]
 readme = "README.md"
