@@ -28,7 +28,7 @@ maintainers = [
 ]
 license = { file = "LICENSE" }
 dependencies = [
-  "bam-masterdata@git+https://github.com/BAMresearch/bam-masterdata.git@main",
+  "bam-masterdata>=0.14.0",
   "nmrglue",
   "numpy"
 ]
