@@ -511,7 +511,7 @@ class TEMParser(AbstractParser):
             }
 
             md = {}
-            for k in PROPERTY_TYPE_CODE_DICT.keys():
+            for k in PROPERTY_TYPE_CODE_DICT.keys():  # noqa: PLC0206
                 metadata
                 if k in metadata.keys():
                     if isinstance(metadata[k], set):
@@ -541,7 +541,6 @@ class TEMParser(AbstractParser):
         if len(metadata) == 0:
             return {}
 
-        object_ids = []
         metadatas = []
         for file in files:
             if file.endswith(".tif"):

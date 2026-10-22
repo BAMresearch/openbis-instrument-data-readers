@@ -31,9 +31,6 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     # unicode() deprecated in Python 3
     unicode_str = str
-else:
-    unicode_str = unicode
-
 ### utility fuctions ###
 
 ### binary data reading functions ###
@@ -221,11 +218,9 @@ class DM3:
         if debugLevel > 5:
             print("rTG: Current Group Level:", self._curGroupLevel)
         # is the group sorted?
-        sorted_ = readByte(self._f)
-        isSorted = sorted_ == 1
+        readByte(self._f)
         # is the group open?
-        opened = readByte(self._f)
-        isOpen = opened == 1
+        readByte(self._f)
         # number of Tags
         nTags = readLong(self._f)
         if debugLevel > 5:
@@ -268,7 +263,7 @@ class DM3:
         delim = readString(self._f, 4).decode("latin-1")
         if delim != "%%%%":
             raise Exception(hex(self._f.tell()) + ": Tag Type delimiter not %%%%")
-        nInTag = readLong(self._f)
+        readLong(self._f)
         self._readAnyData()
         return 1
 
@@ -402,7 +397,7 @@ class DM3:
             and (arraySize < 256)
         ):
             # treat as string
-            val = self._readStringData(bufSize)
+            self._readStringData(bufSize)
         else:
             # treat as binary data
             # - store data size and offset as tags
@@ -419,7 +414,7 @@ class DM3:
         if debugLevel > 3:
             print("Reading Struct Types at Pos = " + hex(self._f.tell()))
 
-        structNameLength = readLong(self._f)
+        readLong(self._f)
         nFields = readLong(self._f)
 
         if debugLevel > 5:
@@ -505,11 +500,10 @@ class DM3:
         # check file header, raise Exception if not DM3
         if not isDM3:
             raise Exception(
-                "%s does not appear to be a DM3 file."
-                % os.path.split(self._filename)[1]
+                f"{os.path.split(self._filename)[1]} does not appear to be a DM3 file."
             )
         elif self._debug > 0:
-            print("%s appears to be a DM3 file" % (self._filename))
+            print(f"{self._filename} appears to be a DM3 file")
 
         if debugLevel > 5 or self._debug > 1:
             print("Header info.:")
@@ -522,22 +516,22 @@ class DM3:
         # ... then read it
         self._readTagGroup()
         if self._debug > 0:
-            print("-- %s Tags read --" % len(self._storedTags))
+            print(f"-- {len(self._storedTags)} Tags read --")
 
         # fetch image characteristics
         tag_root = "root.ImageList.1"
-        self._data_type = int(self.tags["%s.ImageData.DataType" % tag_root])
-        self._im_width = int(self.tags["%s.ImageData.Dimensions.0" % tag_root])
-        self._im_height = int(self.tags["%s.ImageData.Dimensions.1" % tag_root])
+        self._data_type = int(self.tags[f"{tag_root}.ImageData.DataType"])
+        self._im_width = int(self.tags[f"{tag_root}.ImageData.Dimensions.0"])
+        self._im_height = int(self.tags[f"{tag_root}.ImageData.Dimensions.1"])
         try:
             self._im_depth = int(self.tags["root.ImageList.1.ImageData.Dimensions.2"])
         except KeyError:
             self._im_depth = 1
 
         if self._debug > 0:
-            print("Notice: image size: %sx%s px" % (self._im_width, self._im_height))
+            print(f"Notice: image size: {self._im_width}x{self._im_height} px")
             if self._im_depth > 1:
-                print("Notice: %s image stack" % (self._im_depth))
+                print(f"Notice: {self._im_depth} image stack")
 
     @property
     def data_type(self):
@@ -599,7 +593,7 @@ class DM3:
         )
         try:
             dumpf = open(dump_file, "w")
-        except:
+        except:  # noqa: E722
             print("Warning: cannot generate dump file.")
         else:
             for tag in self._storedTags:
@@ -612,29 +606,27 @@ class DM3:
         # define useful information
         tag_root = "root.ImageList.1"
         info_keys = {
-            "descrip": "%s.Description" % tag_root,
-            "acq_date": "%s.ImageTags.DataBar.Acquisition Date" % tag_root,
-            "acq_time": "%s.ImageTags.DataBar.Acquisition Time" % tag_root,
-            "name": "%s.ImageTags.Microscope Info.Name" % tag_root,
-            "micro": "%s.ImageTags.Microscope Info.Microscope" % tag_root,
-            "hv": "%s.ImageTags.Microscope Info.Voltage" % tag_root,
-            "mag": "%s.ImageTags.Microscope Info.Indicated Magnification" % tag_root,
-            "mode": "%s.ImageTags.Microscope Info.Operation Mode" % tag_root,
-            "operator": "%s.ImageTags.Microscope Info.Operator" % tag_root,
-            "specimen": "%s.ImageTags.Microscope Info.Specimen" % tag_root,
+            "descrip": f"{tag_root}.Description",
+            "acq_date": f"{tag_root}.ImageTags.DataBar.Acquisition Date",
+            "acq_time": f"{tag_root}.ImageTags.DataBar.Acquisition Time",
+            "name": f"{tag_root}.ImageTags.Microscope Info.Name",
+            "micro": f"{tag_root}.ImageTags.Microscope Info.Microscope",
+            "hv": f"{tag_root}.ImageTags.Microscope Info.Voltage",
+            "mag": f"{tag_root}.ImageTags.Microscope Info.Indicated Magnification",
+            "mode": f"{tag_root}.ImageTags.Microscope Info.Operation Mode",
+            "operator": f"{tag_root}.ImageTags.Microscope Info.Operator",
+            "specimen": f"{tag_root}.ImageTags.Microscope Info.Specimen",
             # More properties added
-            "ScaleX": "%s.ImageData.Calibrations.Dimension.0.Scale" % tag_root,
-            "UnitX": "%s.ImageData.Calibrations.Dimension.0.Units" % tag_root,
-            "ScaleY": "%s.ImageData.Calibrations.Dimension.0.Scale" % tag_root,
-            "UnitY": "%s.ImageData.Calibrations.Dimension.0.Units" % tag_root,
-            "ImageSizeX": "%s.ImageData.Dimensions.0" % tag_root,
-            "ImageSizeY": "%s.ImageData.Dimensions.1" % tag_root,
-            "Detector": "%s.ImageTags.Acquisition.Device.Name" % tag_root,
-            "OperatingMode": "%s.ImageTags.Microscope Info.Illumination Mode"
-            % tag_root,
-            "ProjectorMode": "%s.ImageTags.Microscope Info.Operation Mode" % tag_root,
-            "CameraLength": "%s.ImageTags.Microscope Info.STEM Camera Length"
-            % tag_root,
+            "ScaleX": f"{tag_root}.ImageData.Calibrations.Dimension.0.Scale",
+            "UnitX": f"{tag_root}.ImageData.Calibrations.Dimension.0.Units",
+            "ScaleY": f"{tag_root}.ImageData.Calibrations.Dimension.0.Scale",
+            "UnitY": f"{tag_root}.ImageData.Calibrations.Dimension.0.Units",
+            "ImageSizeX": f"{tag_root}.ImageData.Dimensions.0",
+            "ImageSizeY": f"{tag_root}.ImageData.Dimensions.1",
+            "Detector": f"{tag_root}.ImageTags.Acquisition.Device.Name",
+            "OperatingMode": f"{tag_root}.ImageTags.Microscope Info.Illumination Mode",
+            "ProjectorMode": f"{tag_root}.ImageTags.Microscope Info.Operation Mode",
+            "CameraLength": f"{tag_root}.ImageTags.Microscope Info.STEM Camera Length",
             #    'image_notes': "root.DocumentObjectList.10.Text' # = Image Notes
         }
         # get experiment information
@@ -665,8 +657,8 @@ class DM3:
 
         # get relevant Tags
         tag_root = "root.ImageList.1"
-        data_offset = int(self.tags["%s.ImageData.Data.Offset" % tag_root])
-        data_size = int(self.tags["%s.ImageData.Data.Size" % tag_root])
+        data_offset = int(self.tags[f"{tag_root}.ImageData.Data.Offset"])
+        data_size = int(self.tags[f"{tag_root}.ImageData.Data.Size"])
         data_type = self._data_type
         im_width = self._im_width
         im_height = self._im_height
@@ -674,8 +666,7 @@ class DM3:
 
         if self._debug > 0:
             print(
-                "Notice: image data in %s starts at %s"
-                % (os.path.split(self._filename)[1], hex(data_offset))
+                f"Notice: image data in {os.path.split(self._filename)[1]} starts at {hex(data_offset)}"
             )
 
         # check if image DataType is implemented, then read
@@ -683,8 +674,7 @@ class DM3:
             np_dt = numpy.dtype(dT_str[data_type])
             if self._debug > 0:
                 print(
-                    "Notice: image data type: %s ('%s'), read as %s"
-                    % (data_type, dataTypes[data_type], np_dt)
+                    f"Notice: image data type: {data_type} ('{dataTypes[data_type]}'), read as {np_dt}"
                 )
             self._f.seek(data_offset)
             # - fetch image data
@@ -698,8 +688,7 @@ class DM3:
                 ima = ima.reshape(im_height, im_width)
         else:
             raise Exception(
-                "Cannot extract image data from %s: unimplemented DataType (%s:%s)."
-                % (os.path.split(self._filename)[1], data_type, dataTypes[data_type])
+                f"Cannot extract image data from {os.path.split(self._filename)[1]}: unimplemented DataType ({data_type}:{dataTypes[data_type]})."
             )
 
         # if image dataType is BINARY, binarize image
@@ -731,12 +720,6 @@ class DM3:
         }
 
         # define loaded array dtype if has to be fixed to match Image mode
-        dT_newdtypes = {
-            1: "int32",  # 16-bit LE integer to 32-bit int
-            2: "float32",  # 32-bit LE float to 32-bit float
-            9: "int32",  # 8-bit signed integer to 32-bit int
-            10: "int32",  # 16-bit LE u. integer to 32-bit int
-        }
 
         # get relevant Tags
         data_type = self._data_type
@@ -747,7 +730,7 @@ class DM3:
         # fetch image data array
         ima = self.imagedata
         # assign Image mode
-        mode_ = dT_modes[data_type]
+        dT_modes[data_type]
 
         # reshape array if image stack
         if im_depth > 1:
@@ -757,8 +740,8 @@ class DM3:
     def contrastlimits(self):
         """Returns display range (cuts)."""
         tag_root = "root.DocumentObjectList.0"
-        low = int(float(self.tags["%s.ImageDisplayInfo.LowLimit" % tag_root]))
-        high = int(float(self.tags["%s.ImageDisplayInfo.HighLimit" % tag_root]))
+        low = int(float(self.tags[f"{tag_root}.ImageDisplayInfo.LowLimit"]))
+        high = int(float(self.tags[f"{tag_root}.ImageDisplayInfo.HighLimit"]))
         cuts = (low, high)
         return cuts
 
@@ -772,15 +755,15 @@ class DM3:
         """Returns pixel size and unit."""
         tag_root = "root.ImageList.1"
         pixel_size = float(
-            self.tags["%s.ImageData.Calibrations.Dimension.0.Scale" % tag_root]
+            self.tags[f"{tag_root}.ImageData.Calibrations.Dimension.0.Scale"]
         )
-        unit = self.tags["%s.ImageData.Calibrations.Dimension.0.Units" % tag_root]
+        unit = self.tags[f"{tag_root}.ImageData.Calibrations.Dimension.0.Units"]
         if unit == "\xb5m":
             unit = "micron"
         else:
             unit = unit.encode("ascii")
         if self._debug > 0:
-            print("pixel size = %s %s" % (pixel_size, unit))
+            print(f"pixel size = {pixel_size} {unit}")
         return (pixel_size, unit)
 
     @property
@@ -789,17 +772,16 @@ class DM3:
 
         # get useful thumbnail Tags
         tag_root = "root.ImageList.0"
-        tn_size = int(self.tags["%s.ImageData.Data.Size" % tag_root])
-        tn_offset = int(self.tags["%s.ImageData.Data.Offset" % tag_root])
-        tn_width = int(self.tags["%s.ImageData.Dimensions.0" % tag_root])
-        tn_height = int(self.tags["%s.ImageData.Dimensions.1" % tag_root])
+        tn_size = int(self.tags[f"{tag_root}.ImageData.Data.Size"])
+        tn_offset = int(self.tags[f"{tag_root}.ImageData.Data.Offset"])
+        tn_width = int(self.tags[f"{tag_root}.ImageData.Dimensions.0"])
+        tn_height = int(self.tags[f"{tag_root}.ImageData.Dimensions.1"])
 
         if self._debug > 0:
             print(
-                "Notice: tn data in %s starts at %s"
-                % (os.path.split(self._filename)[1], hex(tn_offset))
+                f"Notice: tn data in {os.path.split(self._filename)[1]} starts at {hex(tn_offset)}"
             )
-            print("Notice: tn size: %sx%s px" % (tn_width, tn_height))
+            print(f"Notice: tn size: {tn_width}x{tn_height} px")
 
         # get thumbnail data
         if (tn_width * tn_height * 4) == tn_size:
@@ -818,7 +800,7 @@ class DM3:
             return tndata
         else:
             raise Exception(
-                "Cannot extract thumbnail from %s" % os.path.split(self._filename)[1]
+                f"Cannot extract thumbnail from {os.path.split(self._filename)[1]}"
             )
 
     def makePNGThumbnail(self, tn_file=""):
@@ -835,11 +817,11 @@ class DM3:
         try:
             self.thumbnail.save(tn_path, "PNG")
             if self._debug > 0:
-                print("Thumbnail saved as '%s'." % tn_path)
-        except:
+                print(f"Thumbnail saved as '{tn_path}'.")
+        except:  # noqa: E722
             print("Warning: could not save thumbnail.")
 
 
 ## MAIN ##
 if __name__ == "__main__":
-    print("dm3_lib %s" % VERSION)
+    print(f"dm3_lib {VERSION}")

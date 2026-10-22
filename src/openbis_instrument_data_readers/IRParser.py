@@ -56,7 +56,7 @@ class IRParser(AbstractParser):
         for filename_spa in filename_spa_list:
             metadata: dict[str, str | float | int] = {}
             fc = [i for i in open(filename_spa, "rb")]
-            for i, l in enumerate(fc):
+            for i, l in enumerate(fc):  # noqa: E741
                 if b"Background gemessen am " in l:
                     metadata["START_DATE"] = datetime.strftime(
                         datetime.strptime(

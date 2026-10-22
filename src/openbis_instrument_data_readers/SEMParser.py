@@ -11,6 +11,7 @@
 # Copyright (c) 2025, BAMResearch
 
 
+import sys
 from datetime import datetime
 
 import numpy as np
@@ -87,17 +88,16 @@ class SEMParser(AbstractParser):
             elif fc[0] == 0x4D and fc[1] == 0x4D:
                 bo = "big"
             else:
-                exit(-1)
+                sys.exit(-1)
 
             # Read IFD (only works for baseline tiff with one IFD)
             offset = int.from_bytes(fc[0x04:0x08], byteorder=bo)
             ifd_length = int.from_bytes(fc[offset : offset + 2], byteorder=bo)
             ifd = [fc[i : i + 12] for i in range(offset + 2, ifd_length * 12, 12)]
             start_metadata1 = 0
-            start_metadata2 = 0
             end_metadata = 0
             for t in ifd:
-                tag_id = int.from_bytes(t[0:2], byteorder=bo)
+                int.from_bytes(t[0:2], byteorder=bo)
                 value = int.from_bytes(t[8:], byteorder=bo)
                 # print(f"Tag: {hex(tag_id)}, Value: {value}")
                 if (
@@ -111,7 +111,7 @@ class SEMParser(AbstractParser):
                 elif (
                     int.from_bytes(t[0:2], byteorder=bo) == 0x8547
                 ):  # Tag ID for second metadata block
-                    start_metadata2 = int.from_bytes(t[8:], byteorder=bo)
+                    int.from_bytes(t[8:], byteorder=bo)
                 elif int.from_bytes(t[0:2], byteorder=bo) == 0xFFF1:
                     start_metadata1 = int.from_bytes(t[8:], byteorder=bo)
 
@@ -121,7 +121,7 @@ class SEMParser(AbstractParser):
                     metadata["ImageSizeY"].add(str(value))
 
             if start_metadata1 == 0 or end_metadata == 0:
-                exit(-1)
+                sys.exit(-1)
 
             # Parse metadata from header and store them in a dictionary
             header = fc[start_metadata1:end_metadata].decode("latin-1")
@@ -187,7 +187,7 @@ class SEMParser(AbstractParser):
             }
 
             md: dict[str, str | float | int] = {}
-            for k in PROPERTY_TYPE_CODE_DICT.keys():
+            for k in PROPERTY_TYPE_CODE_DICT.keys():  # noqa: PLC0206
                 if k in metadata.keys():
                     if isinstance(metadata[k], set):
                         tmp = list(metadata[k])

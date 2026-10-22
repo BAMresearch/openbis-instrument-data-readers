@@ -123,7 +123,7 @@ class NMRParser(AbstractParser):
                     data[-100:]
                 )  # Guess as 5 times the noise in the last 100 points
                 peaks = ng.peakpick.pick(data, thresh)
-                peak_heights = sorted(data[[int(i[0]) for i in peaks]])
+                sorted(data[[int(i[0]) for i in peaks]])
                 offset = 7.29 - ppm_scale[int(peaks[0][0])]
                 ppm_scale += offset
             else:
@@ -148,13 +148,13 @@ class NMRParser(AbstractParser):
                     data[-100:]
                 )  # Guess as 5 times the noise in the last 100 points
                 peaks = ng.peakpick.pick(data, thresh)
-                peak_heights = sorted(data[[int(i[0]) for i in peaks]])
+                sorted(data[[int(i[0]) for i in peaks]])
 
             # Oxford Instruments X-Pulse
             if "SPECTROMETERDATASYSTEM" in dic.keys() and dic["SPECTROMETERDATASYSTEM"][
                 0
             ].startswith("Oxford Instruments X-Pulse"):
-                for k in PROPERTY_TYPE_CODE_DICT_OI_XPULSE.keys():
+                for k in PROPERTY_TYPE_CODE_DICT_OI_XPULSE.keys():  # noqa: PLC0206
                     if k not in dic.keys():
                         continue
                     if k in (".OBSERVENUCLEUS", "$INDIRECTNUCLEUS"):
@@ -201,7 +201,7 @@ class NMRParser(AbstractParser):
                 0
             ].startswith("NMR500-vnmrs500"):
                 dic = dic["procpar"]
-                for k in PROPERTY_TYPE_CODE_DICT_VARIAN.keys():
+                for k in PROPERTY_TYPE_CODE_DICT_VARIAN.keys():  # noqa: PLC0206
                     if k not in dic.keys():
                         continue
                     if k in ("sfrq", "d1", "ACQtime"):

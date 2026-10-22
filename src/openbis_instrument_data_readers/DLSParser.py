@@ -270,7 +270,6 @@ class DLSParser(AbstractParser):
             # Fill rugged arrays with nans for converting to numpy, then average across runs, ignoring nans and using slice notation [:] to modify in-place
             for li in all_items:
                 max_len = max([len(jt) for it in li for jt in it])
-                k = 0
                 for it in li:
                     for jt in it:
                         while len(jt) < max_len:

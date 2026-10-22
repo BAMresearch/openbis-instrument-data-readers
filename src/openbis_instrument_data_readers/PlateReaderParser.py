@@ -63,7 +63,7 @@ class PlateReaderParser(AbstractParser):
         legends = []
         titles = []
 
-        for i, l in enumerate(fc):
+        for i, l in enumerate(fc):  # noqa: E741
             if isinstance(l, list) and len(l) > 0 and l[0] == "Plate:":
                 tmp += 1
 
