@@ -28,18 +28,17 @@ maintainers = [
 ]
 license = { file = "LICENSE" }
 dependencies = [
-  "bam-masterdata>=0.14.0",
+  "bam-masterdata>=0.15.0",
   "nmrglue",
   "numpy"
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/LucasZimm/bam-upload-parsers"
-"Bug Tracker" = "https://github.com/LucasZimm/bam-upload-parsers/issues"
+"Homepage" = "https://github.com/BAMresearch/bam-upload-parsers"
+"Bug Tracker" = "https://github.com/BAMresearch/bam-upload-parsers/issues"
 
 [project.optional-dependencies]
 dev = [
-  "mypy>=1.18.2",
   "ruff",
   "pytest",
   "pytest-timeout",
@@ -48,7 +47,7 @@ dev = [
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
-include = ["src/bam_upload_parsers/*.py", "tests/*.py"]
+include = ["src/openbis_instrument_data_readers/*.py", "tests/*.py"]
 exclude = [
     ".bzr",
     ".direnv",
@@ -115,14 +114,6 @@ skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
 
-[tool.mypy]
-python_version = "3.14"
-strict = false
-ignore_missing_imports = true
-follow_imports = "silent"
-no_strict_optional = true
-disable_error_code = "import, annotation-unchecked"
-
 [tool.setuptools]
 package-dir = { "" = "src" }
 
@@ -130,12 +121,12 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools_scm]
-write_to = "src/bam_upload_parsers/_version.py"
+write_to = "src/openbis_instrument_data_readers/_version.py"
 
 [project.entry-points."bam.parsers"]
-sem_parser_entry_point = "bam_upload_parsers:sem_parser_entry_point"
-plate_reader_parser_entry_point = "bam_upload_parsers:plate_reader_parser_entry_point"
-ir_parser_entry_point = "bam_upload_parsers:ir_parser_entry_point"
-nmr_parser_entry_point = "bam_upload_parsers:nmr_parser_entry_point"
-tem_parser_entry_point = "bam_upload_parsers:tem_parser_entry_point"
-dls_parser_entry_point = "bam_upload_parsers:dls_parser_entry_point"
+sem_parser_entry_point = "openbis_instrument_data_readers:sem_parser_entry_point"
+plate_reader_parser_entry_point = "openbis_instrument_data_readers:plate_reader_parser_entry_point"
+ir_parser_entry_point = "openbis_instrument_data_readers:ir_parser_entry_point"
+nmr_parser_entry_point = "openbis_instrument_data_readers:nmr_parser_entry_point"
+tem_parser_entry_point = "openbis_instrument_data_readers:tem_parser_entry_point"
+dls_parser_entry_point = "openbis_instrument_data_readers:dls_parser_entry_point"
