@@ -1,6 +1,6 @@
-# bam-upload-parsers
+# OpenBIS Instruments Data Readers
 
-Some parsers for openBIS to be used in the bam-masterdata parser interface
+Some parsers for multiple instruments for openBIS to be used in the bam-masterdata parser interface
 
 This repository is intended to be used as entry point for the parsers from [`openbis-upload-helper`](https://github.com/BAMresearch/openbis-upload-helper).
 
@@ -39,8 +39,8 @@ This repository restructures parser components originally from `bam-upload-helpe
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/LucasZimm/bam-upload-parsers.git
-   cd bam-upload-parsers
+   git clone https://github.com/BAMresearch/openbis-instrument-data-readers.git
+   cd openbis-instrument-data-readers
 2. Create and activate a virtual environment:
     ```bash
     python -m .venv venv
