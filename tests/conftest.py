@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from src.bam_upload_parsers.SEMParser import SEMParser
+from src.openbis_instrument_data_readers.SEMParser import SEMParser
 
 if os.getenv("_PYTEST_RAISE", "0") != "0":
 

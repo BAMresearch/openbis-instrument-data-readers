@@ -4,7 +4,7 @@ from bam_masterdata.logger import logger
 from bam_masterdata.metadata.entities import CollectionType
 from bam_masterdata.parsing import AbstractParser
 
-from src.bam_upload_parsers import (
+from src.openbis_instrument_data_readers import (
     DLSParser,
     IRParser,
     NMRParser,
